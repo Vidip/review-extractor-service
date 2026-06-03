@@ -20,32 +20,28 @@ You are responsible for ensuring your use complies with applicable terms of serv
 ### Current architecture
 
 <p align="center">
-  <a href="docs/architecture/current-architecture.png">
+  <a href="docs/architecture/current-architecture@2x.png">
     <img
-      src="docs/architecture/current-architecture.png"
-      alt="Current architecture diagram"
-      width="1024"
+      src="docs/architecture/current-architecture@2x.png"
+      alt="Current architecture diagram (PNG)"
+      width="900"
     />
   </a>
 </p>
-
-<p align="center"><em>Click image to open full size.</em></p>
 
 End-to-end flow today: frontend or Gradio chat → ECS (crawl/extraction + chat services) → Firecrawl, OpenAI extraction, Langfuse, and PostgreSQL (pgvector).
 
 ### Ideal architecture
 
 <p align="center">
-  <a href="docs/architecture/ideal-architecture.png">
+  <a href="docs/architecture/ideal-architecture@2x.png">
     <img
-      src="docs/architecture/ideal-architecture.png"
-      alt="Ideal architecture diagram"
-      width="1024"
+      src="docs/architecture/ideal-architecture@2x.png"
+      alt="Ideal architecture diagram (PNG)"
+      width="900"
     />
   </a>
 </p>
-
-<p align="center"><em>Click image to open full size.</em></p>
 
 Target state: API Gateway → orchestrator/worker Lambdas → SQS job queues → fetch, embed, and store in PostgreSQL (pgvector) with optional Pinecone for vector search experiments.
 
