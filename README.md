@@ -22,7 +22,7 @@ You are responsible for ensuring your use complies with applicable terms of serv
 <p align="center">
   <a href="docs/architecture/current-architecture.png">
     <img
-      src="docs/architecture/current-architecture@2x.png"
+      src="docs/architecture/current-architecture.png"
       alt="Current architecture diagram (PNG)"
       width="900"
     />
