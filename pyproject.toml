@@ -1,0 +1,53 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "capterra-review-extractor"
+version = "0.1.0"
+requires-python = ">=3.9"
+dependencies = [
+    "httpx>=0.27.0",
+    "beautifulsoup4>=4.12.0",
+    "openai>=1.40.0",
+    "langfuse>=3.7.0",
+    "python-dotenv>=1.0.0",
+    "curl_cffi>=0.7.0",
+    "sqlalchemy>=2.0.0",
+    "psycopg[binary]>=3.1.0",
+    "pgvector>=0.3.0",
+    "alembic>=1.13.0",
+    "pydantic-settings>=2.0.0",
+    "fastapi>=0.110.0",
+    "uvicorn[standard]>=0.27.0",
+    # Gradio 4.44 calls TemplateResponse(name, context); Starlette 0.46+ removed that API.
+    "starlette>=0.40.0,<0.46.0",
+    "gradio==4.44.1",
+    # Gradio 4.x still imports HfFolder from huggingface_hub (removed in 1.x).
+    "huggingface-hub<1.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+]
+
+[project.scripts]
+capterra-chat-ui = "src.chat.gradio_app:cli"
+
+[tool.setuptools]
+packages = [
+    "src",
+    "src.api",
+    "src.api.routes",
+    "src.chat",
+    "src.crawl",
+    "src.db",
+    "src.extractor",
+    "src.rag",
+    "src.observability",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
