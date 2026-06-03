@@ -19,13 +19,33 @@ You are responsible for ensuring your use complies with applicable terms of serv
 
 ### Current architecture
 
-![Current architecture](docs/architecture/current-architecture.png)
+<p align="center">
+  <a href="docs/architecture/current-architecture.png">
+    <img
+      src="docs/architecture/current-architecture.png"
+      alt="Current architecture diagram"
+      width="1024"
+    />
+  </a>
+</p>
+
+<p align="center"><em>Click image to open full size.</em></p>
 
 End-to-end flow today: frontend or Gradio chat → ECS (crawl/extraction + chat services) → Firecrawl, OpenAI extraction, Langfuse, and PostgreSQL (pgvector).
 
 ### Ideal architecture
 
-![Ideal architecture](docs/architecture/ideal-architecture.png)
+<p align="center">
+  <a href="docs/architecture/ideal-architecture.png">
+    <img
+      src="docs/architecture/ideal-architecture.png"
+      alt="Ideal architecture diagram"
+      width="1024"
+    />
+  </a>
+</p>
+
+<p align="center"><em>Click image to open full size.</em></p>
 
 Target state: API Gateway → orchestrator/worker Lambdas → SQS job queues → fetch, embed, and store in PostgreSQL (pgvector) with optional Pinecone for vector search experiments.
 
@@ -204,3 +224,6 @@ pytest
 
 - Store API keys in `.env` (never commit)
 - Cookie files contain session tokens — do not commit
+
+**To Do**
+- Create logic to upload excel file with review data, parse the excel file and Ingest in in DB
