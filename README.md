@@ -1,6 +1,11 @@
-# Capterra Review Extractor
+# Review Extractor
 
-Fetch Capterra review pages, extract structured data with OpenAI, store in PostgreSQL with embeddings.
+Fetch Capterra reviews from the SaaS products, extract structured data with OpenAI, store in PostgreSQL with embeddings. Can be adapted to any url (with normalization layer separate for each url).
+
+| App | URL |
+|-----|-----|
+| **Extract reviews** | [product-reviews-ai-analysis (Vercel)](https://product-reviews-ai-analysis-oge4loufd-vidips-projects.vercel.app/) |
+| **Chat** | [Review chat UI (ECS)](https://pr-efc9d4d66edc4544ace261e15c9f1d87.ecs.us-east-1.on.aws/) |
 
 ## Disclaimer — sample / development use only
 
@@ -9,6 +14,20 @@ This project is provided for **local experimentation, learning, and development*
 Automated crawling or scraping of Capterra may **violate [Capterra’s Terms of Use](https://www.capterra.com/legal/terms-of-use/)** and related policies. Do not deploy this crawler to collect, republish, or monetize Capterra content at scale. Use official Capterra APIs, partnerships, or licensed data sources for any production or commercial product.
 
 You are responsible for ensuring your use complies with applicable terms of service, robots.txt, and laws in your jurisdiction.
+
+## Architecture
+
+### Current architecture
+
+![Current architecture](docs/architecture/current-architecture.png)
+
+End-to-end flow today: frontend or Gradio chat → ECS (crawl/extraction + chat services) → Firecrawl, OpenAI extraction, Langfuse, and PostgreSQL (pgvector).
+
+### Ideal architecture
+
+![Ideal architecture](docs/architecture/ideal-architecture.png)
+
+Target state: API Gateway → orchestrator/worker Lambdas → SQS job queues → fetch, embed, and store in PostgreSQL (pgvector) with optional Pinecone for vector search experiments.
 
 ## Setup
 
