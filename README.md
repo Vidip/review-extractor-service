@@ -125,7 +125,7 @@ python scripts/run_crawl_local.py "https://www.capterra.com/p/121248/When-I-Work
 
 Crawls always walk pages newest-first. On each page, reviews are inserted in order until the first hash already in the database; then paging stops. A first-time product with no reviews crawls through all pagination pages; an existing product only picks up new reviews at the head.
 
-### Mock fetch (current default)
+### Mock fetch (if it has exceeded set threshold, to reset contact me - mostly you can only try with any one capterra.com product link for demo - no commerical use)
 
 The Firecrawl call in `src/extractor/fetch.py` is **commented out** for development. `fetch_page` returns fixed sample HTML (`_MOCK_FIRECRAWL_HTML`) with two fake reviews so you can test the rest of the pipeline (OpenAI extraction, embeddings, DB writes, Langfuse traces) without hitting Capterra or Firecrawl.
 
