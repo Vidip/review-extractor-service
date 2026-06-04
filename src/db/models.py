@@ -76,6 +76,7 @@ class Review(Base):
 
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     product_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("products.id", ondelete="CASCADE"), nullable=False)
+    product_name: Mapped[str] = mapped_column(String(512), default="", nullable=False)
     content_hash: Mapped[str] = mapped_column(String(64), nullable=False)
     review_date: Mapped[Optional[date]] = mapped_column(Date)
     pros: Mapped[str] = mapped_column(Text, default="", nullable=False)

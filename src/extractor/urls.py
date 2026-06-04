@@ -29,6 +29,11 @@ def extract_slug_from_url(url: str) -> str | None:
     return match.group(1) if match else None
 
 
+def extract_product_name_from_url(url: str) -> str:
+    """Derive product name from the Capterra URL slug (e.g. When-I-Work)."""
+    return extract_slug_from_url(url) or "Unknown Product"
+
+
 def build_reviews_page_url(base_url: str, page: int) -> str:
     """Build paginated Capterra reviews URL."""
     normalized = normalize_capterra_url(base_url)

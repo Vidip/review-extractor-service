@@ -2,7 +2,7 @@
 
 from src.crawl.jobs import reviews_until_duplicate
 from src.extractor.hash import hash_review
-from src.extractor.urls import build_reviews_page_url, normalize_capterra_url
+from src.extractor.urls import build_reviews_page_url, extract_product_name_from_url, normalize_capterra_url
 
 
 def test_normalize_capterra_url():
@@ -24,6 +24,11 @@ def test_normalize_capterra_url():
         normalize_capterra_url("https://www.capterra.com/p/121248/When-I-Work/reviews/?page=3")
         == expected
     )
+
+
+def test_extract_product_name_from_url():
+    assert extract_product_name_from_url("https://www.capterra.com/p/121248/When-I-Work/reviews/") == "When-I-Work"
+    assert extract_product_name_from_url("https://www.capterra.com/p/999/") == "Unknown Product"
 
 
 def test_build_reviews_page_url():

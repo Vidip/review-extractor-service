@@ -39,6 +39,7 @@ class ProductResponse(BaseModel):
 class ReviewResponse(BaseModel):
     id: uuid.UUID
     product_id: uuid.UUID
+    product_name: str
     review_date: Optional[date]
     pros: str
     cons: str

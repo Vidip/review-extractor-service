@@ -12,7 +12,15 @@ from sqlalchemy.orm import Session
 
 from src.db.models import Crawl, Product, Review, SyncMode, SyncRun, SyncStatus
 from src.extractor.hash import hash_review
-from src.extractor.urls import extract_slug_from_url, normalize_capterra_url
+from src.extractor.urls import extract_product_name_from_url, extract_slug_from_url, normalize_capterra_url
+
+
+def _product_name_for_review(product: Product) -> str:
+    return (
+        extract_product_name_from_url(product.capterra_url)
+        if product.capterra_url
+        else product.name or product.slug or "Unknown Product"
+    )
 
 
 def parse_review_date(value: str | None) -> date | None:
@@ -157,6 +165,7 @@ class ReviewRepository:
     ) -> int:
         inserted = 0
         latest_date = product.last_review_date
+        product_name = _product_name_for_review(product)
 
         for review_dict, embedding, search_text in items:
             content_hash = hash_review(review_dict)
@@ -174,6 +183,7 @@ class ReviewRepository:
 
             review = Review(
                 product_id=product.id,
+                product_name=product_name,
                 content_hash=content_hash,
                 review_date=review_date,
                 pros=review_dict.get("reviewPros", "") or "",

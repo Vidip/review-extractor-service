@@ -113,6 +113,7 @@ def process_crawl_page(session: Session, job: CrawlPageJob, settings: Settings |
     client = create_openai_client(settings.openai_key)
 
     extracted = extract_reviews_with_openai(page_text, client, settings.openai_model)
+
     if job.page == 1:
         total_pages = _resolve_total_pages(html, page_text, client, settings.openai_model)
         products.update_pagination(product, total_pages)
