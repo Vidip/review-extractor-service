@@ -50,6 +50,14 @@ class CrawlRepository:
             self.session.flush()
         return row.crawl_count
 
+    def increment_crawl_count(self) -> None:
+        row = self.session.get(Crawl, _CRAWL_SINGLETON_ID)
+        if row is None:
+            row = Crawl(id=_CRAWL_SINGLETON_ID, crawl_count=0)
+            self.session.add(row)
+        row.crawl_count += 1
+        self.session.flush()
+
 
 class ProductRepository:
     def __init__(self, session: Session):

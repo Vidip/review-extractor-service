@@ -86,6 +86,7 @@ def fetch_page(
         if firecrawl_key:
             try:
                 html = fetch_with_firecrawl(url, firecrawl_key, timeout=max(timeout, 60))
+                crawl_repo.increment_crawl_count()
                 if own_session:
                     db.commit()
                 update_span_context(
