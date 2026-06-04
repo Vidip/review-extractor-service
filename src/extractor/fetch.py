@@ -3,10 +3,12 @@
 from typing import List, Optional
 
 import httpx
+from sqlalchemy.orm import Session
 
 from src.config import get_settings  # noqa: F401 — ensure .env loaded before Langfuse
 from langfuse import observe
 
+from src.db.session import get_session_factory
 from src.observability.langfuse_tracing import update_span_context
 
 # TODO: remove — temporary stub HTML while testing Langfuse integration
@@ -61,26 +63,46 @@ def fetch_page(
     url: str,
     timeout: float = 30.0,
     firecrawl_key: Optional[str] = None,
+    session: Optional[Session] = None,
 ) -> str:
     """Fetch HTML for a reviews page URL."""
     update_span_context(input={"url": url})
 
-    # TODO: remove — mock Firecrawl response for Langfuse testing
-    html = _MOCK_FIRECRAWL_HTML
-    update_span_context(output={"strategy": "firecrawl-mock", "html_bytes": len(html)})
-    return html
+    from src.db.repository import CrawlRepository
 
-    # errors: List[str] = []
-    #
-    # if firecrawl_key:
-    #     try:
-    #         html = fetch_with_firecrawl(url, firecrawl_key, timeout=max(timeout, 60))
-    #         update_span_context(output={"strategy": "firecrawl", "html_bytes": len(html)})
-    #         return html
-    #     except Exception as exc:  # noqa: BLE001
-    #         errors.append(f"firecrawl: {exc}")
-    #
-    # raise httpx.HTTPError(
-    #     "All fetch strategies failed.\n"
-    #     + "\n".join(errors)
-    # )
+    own_session = session is None
+    db = get_session_factory()() if own_session else session
+    try:
+        crawl_repo = CrawlRepository(db)
+        crawl_count = crawl_repo.get_crawl_count()
+        if crawl_count >= 2:
+            html = _MOCK_FIRECRAWL_HTML
+            update_span_context(
+                output={"strategy": "firecrawl-mock", "html_bytes": len(html), "crawl_count": crawl_count}
+            )
+            return html
+
+        errors: List[str] = []
+        if firecrawl_key:
+            try:
+                html = fetch_with_firecrawl(url, firecrawl_key, timeout=max(timeout, 60))
+                if own_session:
+                    db.commit()
+                update_span_context(
+                    output={
+                        "strategy": "firecrawl",
+                        "html_bytes": len(html),
+                        "crawl_count": crawl_count + 1,
+                    }
+                )
+                return html
+            except Exception as exc:  # noqa: BLE001
+                errors.append(f"firecrawl: {exc}")
+
+        raise httpx.HTTPError(
+            "All fetch strategies failed.\n"
+            + "\n".join(errors)
+        )
+    finally:
+        if own_session:
+            db.close()

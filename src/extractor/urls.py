@@ -9,9 +9,10 @@ from urllib.parse import parse_qs, urlencode, urlparse, urlunparse
 def normalize_capterra_url(url: str) -> str:
     """Ensure URL points at the reviews listing (page 1, no query params).
 
-    Accepts either a product URL or a reviews URL, e.g.:
-    - .../p/121248/When-I-Work/           -> .../p/121248/When-I-Work/reviews/
-    - .../p/121248/When-I-Work/reviews/   -> unchanged (aside from stripping query params)
+    Supported inputs (all normalize to ``.../p/{id}/{slug}/reviews/``):
+    - .../p/121248/When-I-Work/
+    - .../p/121248/When-I-Work/#reviews
+    - .../p/121248/When-I-Work/reviews/  (query params stripped)
     """
     parsed = urlparse(url.strip())
     path = parsed.path.rstrip("/")

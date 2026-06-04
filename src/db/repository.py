@@ -10,7 +10,7 @@ from typing import Iterable, Sequence
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
-from src.db.models import Product, Review, SyncMode, SyncRun, SyncStatus
+from src.db.models import Crawl, Product, Review, SyncMode, SyncRun, SyncStatus
 from src.extractor.hash import hash_review
 from src.extractor.urls import extract_slug_from_url, normalize_capterra_url
 
@@ -33,6 +33,22 @@ def parse_rating(value: str | None) -> Decimal | None:
         return Decimal(str(value).strip())
     except InvalidOperation:
         return None
+
+
+_CRAWL_SINGLETON_ID = 1
+
+
+class CrawlRepository:
+    def __init__(self, session: Session):
+        self.session = session
+
+    def get_crawl_count(self) -> int:
+        row = self.session.get(Crawl, _CRAWL_SINGLETON_ID)
+        if row is None:
+            row = Crawl(id=_CRAWL_SINGLETON_ID, crawl_count=0)
+            self.session.add(row)
+            self.session.flush()
+        return row.crawl_count
 
 
 class ProductRepository:

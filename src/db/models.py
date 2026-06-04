@@ -92,6 +92,15 @@ class Review(Base):
     product: Mapped["Product"] = relationship(back_populates="reviews")
 
 
+class Crawl(Base):
+    """Singleton row tracking how many live page fetches have been performed."""
+
+    __tablename__ = "crawl"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, default=1)
+    crawl_count: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+
+
 class SyncRun(Base):
     __tablename__ = "sync_runs"
 

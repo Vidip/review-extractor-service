@@ -13,6 +13,14 @@ def test_normalize_capterra_url():
         == expected
     )
     assert (
+        normalize_capterra_url("https://www.capterra.com/p/121248/When-I-Work/#reviews")
+        == expected
+    )
+    assert (
+        normalize_capterra_url("https://www.capterra.com/p/121248/When-I-Work/reviews")
+        == expected
+    )
+    assert (
         normalize_capterra_url("https://www.capterra.com/p/121248/When-I-Work/reviews/?page=3")
         == expected
     )
@@ -22,6 +30,7 @@ def test_build_reviews_page_url():
     base = "https://www.capterra.com/p/121248/When-I-Work/reviews/"
     assert build_reviews_page_url(base, 1) == base
     assert build_reviews_page_url(base, 2) == base + "?page=2"
+    assert build_reviews_page_url("https://www.capterra.com/p/121248/When-I-Work/#reviews", 1) == base
 
 
 def test_hash_review_stable():
