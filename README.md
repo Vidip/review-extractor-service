@@ -227,3 +227,6 @@ pytest
 
 **To Do**
 - Create logic to upload excel file with review data, parse the excel file and Ingest in in DB
+- Compress Prompt histroy while sending the history messages (as it reduces token cost)
+- Have dynamic Model selection as per the use case (again, token optimization)
+- If user is logged in then can maintain agent memory (using Mem0 or Orcale Agent Memory) - to retain working memory across interactions 
